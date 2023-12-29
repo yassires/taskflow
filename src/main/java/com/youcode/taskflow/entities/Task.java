@@ -23,6 +23,7 @@ public class Task {
 
     private String title;
     private String description;
+    private LocalDate createdAt;
     private LocalDate startDate;
     private LocalDate endDate;
     @ManyToOne

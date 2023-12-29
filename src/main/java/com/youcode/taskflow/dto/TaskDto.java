@@ -1,6 +1,8 @@
 package com.youcode.taskflow.dto;
 
 
+import com.youcode.taskflow.entities.Tag;
+import com.youcode.taskflow.entities.User;
 import com.youcode.taskflow.entities.enums.TaskStatus;
 import lombok.Data;
 
@@ -15,8 +17,7 @@ public class TaskDto implements Serializable {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private UserDto createdBy;
-    private UserDto assignTo;
-    private List<TagDto> tag;
-    private TaskStatus status;
+    private User createdBy;
+    private User assignTo;
+    private List<Integer> tag;
 }
