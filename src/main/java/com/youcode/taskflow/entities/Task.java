@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -30,10 +31,18 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "assigned_to")
-    private User assignedTo;
+    private User assignTo;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
+
+    @ManyToMany
+    @JoinTable(
+            name = "task_to_tags",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tag;
 
 
 }
