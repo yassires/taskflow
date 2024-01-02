@@ -12,4 +12,7 @@ public interface TaskService {
 
     TaskDto createTask(TaskDto taskDTO);
 
+    TaskDto updateTask(Integer taskId, TaskDto taskDto);
+
+
 }
