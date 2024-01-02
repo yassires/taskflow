@@ -1,6 +1,7 @@
 package com.youcode.taskflow.controllers;
 
 import com.youcode.taskflow.dto.TaskDto;
+import com.youcode.taskflow.entities.enums.TaskStatus;
 import com.youcode.taskflow.services.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,12 @@ public class TaskController {
     @PutMapping("/{taskId}")
     public ResponseEntity<String> updateTask(@PathVariable Integer taskId, @RequestBody @Valid TaskDto taskDto) {
         taskService.updateTask(taskId, taskDto);
+        return ResponseEntity.ok("updatedTask");
+    }
+
+    @PutMapping("/{taskId}/status")
+    public ResponseEntity<String> updateTaskStatus(@PathVariable Integer taskId, @RequestBody @Valid TaskStatus status) {
+        taskService.updateTaskStatus(taskId, status);
         return ResponseEntity.ok("updatedTask");
     }
 }

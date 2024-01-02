@@ -19,10 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -97,6 +94,63 @@ public class TaskServiceImpl implements TaskService {
             throw new ValidationException("Task not found with ID: " + taskId);
         }
     }
+
+    @Override
+    public TaskDto updateTaskStatus(Integer taskId, TaskStatus newStatus) {
+        Optional<Task> optionalTask = taskRepository.findById(taskId);
+
+        if (optionalTask.isPresent()) {
+            Task task = optionalTask.get();
+
+            validateStatusTransition(task.getStatus(), newStatus);
+
+            task.setStatus(newStatus);
+
+            Task updatedTask = taskRepository.save(task);
+            return modelMapper.map(updatedTask, TaskDto.class);
+        } else {
+            throw new ValidationException("Task not found with ID: " + taskId);
+        }
+    }
+
+
+    public void updateExpiredTasksStatus() {
+        LocalDate currentDate = LocalDate.now();
+        List<Task> tasksToUpdate = taskRepository.findTasksToUpdateStatus(currentDate, Arrays.asList(TaskStatus.TODO.name(), TaskStatus.IN_PROGRESS.name()));
+
+        for (Task task : tasksToUpdate) {
+            if (task.getEndDate().isBefore(currentDate)) {
+                taskRepository.updateTaskStatus(task.getId(), TaskStatus.EXPIRED.name());
+            }
+        }
+    }
+
+
+    private void validateStatusTransition(TaskStatus currentStatus, TaskStatus newStatus) {
+        if (currentStatus == newStatus) {
+            throw new ValidationException("Task is already in the requested status: " + newStatus);
+        }
+
+        switch (currentStatus) {
+            case TODO:
+                if (newStatus != TaskStatus.IN_PROGRESS) {
+                    throw new ValidationException("Invalid status transition: Task can only move to IN_PROGRESS from TODO.");
+                }
+                break;
+            case IN_PROGRESS:
+                if (newStatus != TaskStatus.DONE && newStatus != TaskStatus.EXPIRED) {
+                    throw new ValidationException("Invalid status transition: Task in progress can only move to DONE or EXPIRED.");
+                }
+                break;
+            case EXPIRED:
+                throw new ValidationException("Invalid status transition: Expired task status cannot be changed.");
+            case DONE:
+                throw new ValidationException("Invalid status transition: Done task status cannot be changed.");
+            default:
+                throw new ValidationException("Invalid status: " + currentStatus);
+        }
+    }
+
 
 
 
