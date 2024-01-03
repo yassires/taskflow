@@ -33,7 +33,7 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskDto> getAllTasks() {
         List<TaskDto> list = new ArrayList<>();
 
-        userRepository.findAll().forEach(task -> {
+        taskRepository.findAll().forEach(task -> {
             list.add(modelMapper.map(task, TaskDto.class));
         });
 
@@ -42,7 +42,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDto createTask(TaskDto taskDto) {
-        Integer createdById = taskDto.getCreatedBy().getId();
+        Long createdById = taskDto.getCreatedBy().getId();
         if (createdById != null){
             User createdBy = userRepository.findById(createdById).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + createdById));
 

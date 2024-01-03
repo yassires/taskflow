@@ -2,11 +2,12 @@ package com.youcode.taskflow.entities;
 
 
 import com.youcode.taskflow.entities.enums.Action;
-import com.youcode.taskflow.entities.enums.TaskReplacementStatus;
+import com.youcode.taskflow.entities.enums.DemandStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -14,17 +15,17 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
-public class TaskReplacement {
+public class Demand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "task")
+    @JoinColumn(name = "task_id")
     private Task task;
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "old_user")
@@ -38,5 +39,5 @@ public class TaskReplacement {
     private Action action;
 
     @Enumerated(EnumType.STRING)
-    private TaskReplacementStatus status;
+    private DemandStatus status;
 }

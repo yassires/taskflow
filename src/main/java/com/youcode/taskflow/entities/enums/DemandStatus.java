@@ -1,6 +1,6 @@
 package com.youcode.taskflow.entities.enums;
 
-public enum TaskReplacementStatus {
+public enum DemandStatus {
     PENDING,
     ACCEPTED,
     REJECTED,
